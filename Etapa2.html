@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipo TechForge</title>
+    <style>
+        /* Estilos CSS profesionales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e2a3a, #0b1a2a);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #58a6ff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .team-description {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid #58a6ff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-style: italic;
+            color: #c9d1d9;
+        }
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .member-card {
+            background: #21262d;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #30363d;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            border-color: #58a6ff;
+        }
+        .member-card h3 {
+            color: #f0f6fc;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .member-card .role {
+            color: #58a6ff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .member-card .skills {
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+        .member-card .skills span {
+            background: #0d1117;
+            padding: 3px 8px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 3px 2px;
+            border: 1px solid #30363d;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #484f58;
+            font-size: 0.9rem;
+        }
+        .footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+ 
+        /* Estilos para el popup/modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-card {
+            background: #21262d;
+            border-radius: 16px;
+            padding: 35px 40px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #58a6ff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: modalFadeIn 0.3s ease;
+            text-align: center;
+        }
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .modal-card h2 {
+            color: #58a6ff;
+            margin-bottom: 8px;
+        }
+        .modal-card .modal-role {
+            color: #8b949e;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .modal-card .modal-skills {
+            color: #c9d1d9;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .modal-card .modal-skills span {
+            background: #0d1117;
+            padding: 4px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 3px 4px;
+            border: 1px solid #30363d;
+        }
+        .modal-close-btn {
+            background: #58a6ff;
+            color: #0d1117;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background: #79c0ff;
+        }
+ 
+        /* Estilos para el contador de clics (footer) */
+        .click-counter {
+            margin-top: 15px;
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+        .click-counter span {
+            color: #58a6ff;
+            font-weight: 700;
+        }
+ 
+        /* Botón de alternar tema */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #e0e0e0;
+            padding: 10px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .theme-toggle:hover {
+            border-color: #58a6ff;
+            background: #30363d;
+        }
+ 
+        /* Tema claro (activado por JS) */
+        body.light-theme {
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            color: #1e2a3a;
+        }
+        body.light-theme .container {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme h1 {
+            color: #0366d6;
+            text-shadow: 0 0 20px rgba(3, 102, 214, 0.2);
+        }
+        body.light-theme .subtitle {
+            color: #586069;
+            border-bottom-color: #d0d7de;
+        }
+        body.light-theme .team-description {
+            background: rgba(0, 0, 0, 0.05);
+            color: #24292e;
+        }
+        body.light-theme .member-card {
+            background: #ffffff;
+            border-color: #d0d7de;
+        }
+        body.light-theme .member-card h3 {
+            color: #24292e;
+        }
+        body.light-theme .member-card .role {
+            color: #0366d6;
+        }
+        body.light-theme .member-card .skills span {
+            background: #f6f8fa;
+            border-color: #d0d7de;
+            color: #24292e;
+        }
+        body.light-theme .footer {
+            color: #586069;
+        }
+        body.light-theme .modal-card {
+            background: #ffffff;
+            border-color: #0366d6;
+        }
+        body.light-theme .modal-card h2 {
+            color: #0366d6;
+        }
+        body.light-theme .modal-card .modal-skills span {
+            background: #f6f8fa;
+            border-color: #d0d7de;
+            color: #24292e;
+        }
+        body.light-theme .theme-toggle {
+            background: #ffffff;
+            border-color: #d0d7de;
+            color: #24292e;
+        }
+        body.light-theme .theme-toggle:hover {
+            border-color: #0366d6;
+            background: #f6f8fa;
+        }
+        body.light-theme .click-counter span {
+            color: #0366d6;
+        }
+    </style>
+</head>
+<body>
+ 
+    <!-- Botón para alternar tema claro/oscuro -->
+    <button class="theme-toggle" id="themeToggle">🌙 Cambiar tema</button>
+ 
+    <div class="container">
+        <h1>⚡ TechForge</h1>
+        <p class="subtitle">Consultoría en Tecnologías Emergentes</p>
+ 
+        <div class="team-description">
+            <p>Equipo de desarrollo especializado en cloud computing, contenedores y automatización. Nuestra misión es diseñar soluciones robustas y escalables para impulsar la transformación digital de las empresas.</p>
+        </div>
+ 
+        <div class="members-grid" id="membersGrid">
+            <!-- Miembro 1 -->
+            <div class="member-card" data-name="Jazmin Lipa Flores" data-role="Tech Lead & Cloud Architect" data-skills="☁️ Bases de datos, 🐧 Linux, 🐍 Python">
+                <h3>Jazmin Lipa Flores</h3>
+                <div class="role">Tech Lead & Cloud Architect</div>
+                <div class="skills">
+                    <span>☁️ Bases de Datos</span>
+                    <span>🐧 Linux</span>
+                     <span>🐍 Python</span>
+                </div>
+            </div>
+ 
+            <!-- Miembro 2 -->
+            <div class="member-card" data-name="Andres Ignacio De la Torre Maida" data-role="Full-Stack Developer" data-skills="☕ Java, ⚛️ CSS, 🐍 Python">
+                <h3>Andres Ignacio De la Torre Maida</h3>
+                <div class="role">Full-Stack Developer</div>
+                <div class="skills">
+                    <span>☕ Java</span>
+                    <span>⚛️ CSS</span>
+                    <span>🐍 Python</span>
+                </div>
+            </div>
+ 
+       
+        </div>
+ 
+        <!-- Contador de clics en el footer -->
+        <div class="footer">
+            <p>© 2026 TechForge · <a href="#">webdocker</a> · Todos los derechos reservados</p>
+            <div class="click-counter">
+                👆 Clics en tarjetas: <span id="clickCount">0</span>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Modal / Popup -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <h2 id="modalName">Nombre</h2>
+            <div class="modal-role" id="modalRole">Rol</div>
+            <div class="modal-skills" id="modalSkills">
+                <span>Skill 1</span>
+                <span>Skill 2</span>
+            </div>
+            <button class="modal-close-btn" id="modalCloseBtn">Cerrar</button>
+        </div>
+    </div>
+ 
+    <script>
+        (function() {
+            'use strict';
+ 
+            // --- Elementos del DOM ---
+            const memberCards = document.querySelectorAll('.member-card');
+            const clickCountSpan = document.getElementById('clickCount');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalName = document.getElementById('modalName');
+            const modalRole = document.getElementById('modalRole');
+            const modalSkills = document.getElementById('modalSkills');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const themeToggle = document.getElementById('themeToggle');
+ 
+            // --- Estado ---
+            let clickCount = 0;
+            let currentTheme = 'dark'; // 'dark' o 'light'
+ 
+            // --- Funciones ---
+ 
+            // Actualiza el contador de clics en el footer
+            function updateClickCounter() {
+                clickCountSpan.textContent = clickCount;
+            }
+ 
+            // Abre el modal con los datos de la tarjeta
+            function openModal(name, role, skillsString) {
+                modalName.textContent = name;
+                modalRole.textContent = role;
+ 
+                // Limpiar y añadir skills como spans
+                modalSkills.innerHTML = '';
+                const skillsArray = skillsString.split(',').map(s => s.trim());
+                skillsArray.forEach(skill => {
+                    const span = document.createElement('span');
+                    span.textContent = skill;
+                    modalSkills.appendChild(span);
+                });
+ 
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Evita scroll detrás del modal
+            }
+ 
+            // Cierra el modal
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restaura scroll
+            }
+ 
+            // Maneja el clic en una tarjeta de miembro
+            function handleMemberClick(event) {
+                const card = event.currentTarget;
+                const name = card.getAttribute('data-name');
+                const role = card.getAttribute('data-role');
+                const skills = card.getAttribute('data-skills');
+ 
+                // Incrementar contador
+                clickCount++;
+                updateClickCounter();
+ 
+                // Abrir modal
+                openModal(name, role, skills);
+            }
+ 
+            // Alterna entre tema claro y oscuro
+            function toggleTheme() {
+                const body = document.body;
+                if (currentTheme === 'dark') {
+                    body.classList.add('light-theme');
+                    currentTheme = 'light';
+                    themeToggle.textContent = '🌙 Cambiar tema';
+                } else {
+                    body.classList.remove('light-theme');
+                    currentTheme = 'dark';
+                    themeToggle.textContent = '☀️ Cambiar tema';
+                }
+            }
+ 
+            // --- Inicialización ---
+ 
+            // Asignar evento de clic a cada tarjeta
+            memberCards.forEach(card => {
+                card.addEventListener('click', handleMemberClick);
+            });
+ 
+            // Evento para cerrar el modal con el botón
+            modalCloseBtn.addEventListener('click', closeModal);
+ 
+            // Cerrar modal al hacer clic en el overlay (fondo)
+            modalOverlay.addEventListener('click', function(event) {
+                if (event.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+ 
+            // Cerrar modal con tecla Escape
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+ 
+            // Evento para el botón de tema
+            themeToggle.addEventListener('click', toggleTheme);
+ 
+            // Inicializar contador en 0
+            updateClickCounter();
+ 
+            // Pequeño efecto: mensaje en consola al cargar
+            console.log('🚀 TechForge - Equipo de desarrollo. Haz clic en las tarjetas para ver detalles.');
+        })();
+    </script>
+</body>
+</html>
